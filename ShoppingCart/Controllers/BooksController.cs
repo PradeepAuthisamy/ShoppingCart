@@ -45,5 +45,39 @@ namespace ShoppingCart.Controllers
             }
             return View();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int ID)
+        {
+            var book = await _db.Books.FindAsync(ID);
+            return View(book);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Books bookInfo)
+        {
+            if (ModelState.IsValid)
+            {
+                var book = await _db.Books.FindAsync(bookInfo.ID);
+                book.Name = bookInfo.Name;
+                book.Author = bookInfo.Author;
+                book.ISBN = bookInfo.ISBN;
+                await _db.SaveChangesAsync();
+                return RedirectToAction("GetBook");
+            }
+            return View();
+        }
+
+        
+        public async Task<IActionResult> Delete(int ID)
+        {
+            var book = await _db.Books.FindAsync(ID);
+            _db.Remove(book);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("GetBook");
+        }
+
     }
 }
