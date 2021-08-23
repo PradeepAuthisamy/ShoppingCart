@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShoppingCart.Models;
-using System;
-using System.Collections.Generic;
+using ShoppingCart.Models.Interface;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShoppingCart.Controllers
@@ -12,15 +11,33 @@ namespace ShoppingCart.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IApplicationDBContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                              IApplicationDBContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> GetBook()
         {
-            return View();
+            var books = await _db.Books.ToListAsync();
+            var bookList = new BookList
+            {
+                Books = books
+            };
+            return View(bookList);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var books = await _db.Books.ToListAsync();
+            var bookList = new BookList
+            {
+                Books = books
+            };
+            return View(bookList);
         }
 
         public IActionResult Privacy()

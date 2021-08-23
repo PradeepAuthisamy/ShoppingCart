@@ -1,5 +1,3 @@
-using System;
-
 namespace ShoppingCart.Models
 {
     public class ErrorViewModel
